@@ -5,7 +5,9 @@ import UserType from "../models/UserType";
 export async function insertUserTypesIfNotExist() {
   const userTypes = [
     { name: "Admin" },
-    { name: "Guest" }
+    { name: "Guest" },
+    { name: "OTserver Owner" },
+    { name: "User" }
   ];
   const table = "User Type";
   try {
