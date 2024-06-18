@@ -3,28 +3,29 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import Cors from 'cors';
 import initMiddleware from '@/lib/init-middleware';
 import database from "@/database";
-import OTServer from "@/database/models/OTServer";
+import { getAll } from "@/database/controllers/OTServerController";
 
 // Initialize the CORS middleware
 const cors = initMiddleware(
   Cors({
     methods: ['GET', 'POST'], // Add other allowed methods if needed
-    origin: '172.111.25.31',
+    origin: '*',
   })
 );
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Apply CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  await cors(req, res); // Apply CORS headers
   
   if (req.method === 'GET') {
     await database.connect();
     
     try {
+      const { page, amount } = req.query;
+      
+      const pageNumber = typeof page === 'string' ? parseInt(page, 10) : 1;
+      const itemsNumber = typeof amount === 'string' ? parseInt(amount, 10) : 50;
       // Fetch the website configuration from the database
-      const config = await OTServer.find();
+      const config = await getAll(pageNumber,itemsNumber);
       
       if (config) {
         res.status(200).json(config);

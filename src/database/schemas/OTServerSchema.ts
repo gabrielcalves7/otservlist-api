@@ -5,6 +5,7 @@ export interface IOTServer extends Document {
   url: string;
   active: boolean;
   email: string;
+  initialRate: number,
   status: Types.ObjectId,
   ownerId: Types.ObjectId; // User type reference
   launchDate: Date,
@@ -19,6 +20,7 @@ const oTServerSchema = new Schema<IOTServer>({
   email: { type: String, unique: true },
   createdAt: { type: Date, default: Date.now },
   launchDate: { type: Date },
+  initialRate: { type: Number },
   active: { type: Boolean, required: true },
   ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   status: { type: Schema.Types.ObjectId, ref: 'OTServerStatus', required: true },
